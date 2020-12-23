@@ -47,7 +47,9 @@ def getCMATable(rawTable):
     return table
 
 
-def getCMARealWeather(cityNum):
+def getCMARealWeather(cityNum,times=5):
+    if times<=0:return
+    times-=1
     url = 'https://weather.cma.cn/api/now/{}'.format(cityNum)
     try:
         data = urlopen(url).read()
@@ -59,13 +61,15 @@ def getCMARealWeather(cityNum):
         return ''
     except URLError:
         # print("超时重试")
-        CMAWeatherTable(cityNum)
+        CMAWeatherTable(cityNum,times)
     except timeout:
         # print("超时重试")
-        CMAWeatherTable(cityNum)
+        CMAWeatherTable(cityNum,times)
 
 
-def CMAWeatherTable(cityNum):
+def CMAWeatherTable(cityNum, times=5):
+    if times<=0:return
+    times-=1
     CMAAddr = 'https://weather.cma.cn/web/weather/{}.html'
     try:
         html = urlopen(CMAAddr.format(cityNum), timeout=3)
@@ -84,12 +88,14 @@ def CMAWeatherTable(cityNum):
         return ''
     except URLError:
         # print("超时重试")
-        CMAWeatherTable(cityNum)
+        CMAWeatherTable(cityNum,times)
     except timeout:
         # print("超时重试")
-        CMAWeatherTable(cityNum)
+        CMAWeatherTable(cityNum,times)
 
-def getCMAWeekWeather(cityNum):
+def getCMAWeekWeather(cityNum, times=5):
+    if times<=0:return
+    times-=1
     #此函数用于获取当天最高温与最低温及天气，同时为没有实时信息的城市返回天气数据
     # 返回值为一个含有七天天气数据的列表，每天天气用字典存储(也可能是六天)
     CMAAddr = 'https://weather.cma.cn/web/weather/{}.html'.format(cityNum)
@@ -121,10 +127,10 @@ def getCMAWeekWeather(cityNum):
         return ''
     except URLError:
         # print("超时重试")
-        getCMAWeekWeather(cityNum)
+        getCMAWeekWeather(cityNum,times)
     except timeout:
         # print("超时重试")
-        getCMAWeekWeather(cityNum)
+        getCMAWeekWeather(cityNum,times)
         return
 
 def getCityNum(name):
@@ -201,5 +207,5 @@ def getWeather(city):
 
 #cityNum = "57083"
 #print(getCMAWeekWeather(cityNum))
-print(getWeather("高雄"))
-#print(getWeather("七台河"))
+#print(getWeather("高雄"))
+print(getWeather("七台河"))
